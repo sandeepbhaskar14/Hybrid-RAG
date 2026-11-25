@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+pydantic-settings
+langchain
+langchain-core
+langchain-community
+langchain-openai
+langchain-chroma
+langchain-text-splitters
+pypdf
