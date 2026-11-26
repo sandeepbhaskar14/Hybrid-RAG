@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from app import memory, rag
 from app.config import settings
 from app.ingestion import ALLOWED, ingest_all, ingest_file
-from app.vector_store import delete_source
+from app.vector_store import delete_source, search
 
 app = FastAPI()
 
@@ -76,6 +76,17 @@ def rename_chat(chat_id: int, body: RenameBody):
 def delete_chat(chat_id: int):
     memory.delete_chat(chat_id)
     return {"deleted": chat_id}
+
+
+# ── retrieval debugging ──────────────────────────────
+@app.get("/search")
+def search_chunks(q: str, k: int = 4):
+    """See exactly what retrieval returns for a query (no LLM involved)."""
+    return [
+        {"source": c.metadata.get("source"), "chunk": c.metadata.get("chunk"),
+         "score": round(score, 3), "text": c.page_content}
+        for c, score in search(q, k)
+    ]
 
 
 # ── documents ────────────────────────────────────────
