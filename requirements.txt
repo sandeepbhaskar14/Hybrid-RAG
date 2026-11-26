@@ -9,3 +9,5 @@ langchain-openai
 langchain-chroma
 langchain-text-splitters
 pypdf
+streamlit
+requests
