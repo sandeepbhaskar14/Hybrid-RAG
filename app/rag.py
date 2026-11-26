@@ -42,8 +42,9 @@ def ask(question, history="", language="English"):
     if history:
         search_query = rewrite_chain.invoke({"history": history, "question": question})
 
-    # 2. find the most relevant chunks
-    chunks = search(search_query)
+    # 2. RETRIEVE: embed the query, ask Qdrant for the closest chunks
+    results = search(search_query)              # [(chunk, score), ...]
+    chunks = [chunk for chunk, score in results]
     context = "\n\n".join(c.page_content for c in chunks)
 
     # 3. ask the LLM, using those chunks as context
